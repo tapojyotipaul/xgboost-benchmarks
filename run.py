@@ -22,4 +22,4 @@ for i in range(NUM_LOOPS):
     inference_time = total_time*1000/num_rows
     inference_times.append(inference_time)
 
-    print(f'{total_time} s', f'\t{inference_time} ms')
+    print(f'Loop #{i}', f'{total_time} s', f'\t{inference_time} ms')

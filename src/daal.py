@@ -1,70 +1,43 @@
-#*******************************************************************************
-# Copyright 2014-2020 Intel Corporation
-# All Rights Reserved.
-#
-# This software is licensed under the Apache License, Version 2.0 (the
-# "License"), the following terms apply:
-#
-# You may not use this file except in compliance with the License.  You may
-# obtain a copy of the License at http://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
-# WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-#
-# See the License for the specific language governing permissions and
-# limitations under the License.
-#*******************************************************************************
-
-# daal4py Gradient Bossting Regression example for shared memory systems
+from timeit import default_timer as timer
 
 import daal4py as d4p
 import numpy as np
+import pandas as pd
 
-# let's try to use pandas' fast csv reader
-try:
-    import pandas
-    read_csv = lambda f, c, t=np.float64: pandas.read_csv(f, usecols=c, delimiter=',', header=None, dtype=np.float32)
-except:
-    # fall back to numpy loadtxt
-    read_csv = lambda f, c, t=np.float64: np.loadtxt(f, usecols=c, delimiter=',', ndmin=2, dtype=np.float32)
+import common
 
+NUM_LOOPS = 100
+PARAMS = { 
+    'nIterations': 10,
+    'method': 'defaultDense',
+    'fptype': 'double'
+}
 
-def main(readcsv=read_csv, method='defaultDense'):
-    maxIterations = 200
+gbt = d4p.gbt_regression_training(maxIterations=200)
+MODEL = gbt.compute(
+            pd.DataFrame(common.X, dtype=np.float32), 
+            pd.DataFrame(common.y, dtype=np.float32)).model
 
-    # input data file
-    infile = "./data/batch/df_regression_train.csv"
-    testfile = "./data/batch/df_regression_test.csv"
+def run_inference(num_observations:int = 1000):
+    """Run xgboost for specified number of observations"""
+    # Load data
+    test_df = common.get_test_data(num_observations)
+    data = pd.DataFrame(test_df, dtype=np.float32)
+    predictor = d4p.gbt_regression_prediction(**PARAMS)
+    num_rows = len(test_df)
 
-    # Configure a training object
-    train_algo = d4p.gbt_regression_training(maxIterations=maxIterations)
+    run_times = []
+    inference_times = []
+    for _ in range(NUM_LOOPS):
+        
+        start_time = timer()
+        predictor.compute(data, MODEL)
+        end_time = timer()
 
-    # Read data. Let's use 3 features per observation
-    data = readcsv(infile, range(13), t=np.float32)
-    deps = readcsv(infile, range(13,14), t=np.float32)
-    train_result = train_algo.compute(data, deps)
+        total_time = end_time - start_time
+        run_times.append(total_time*10e3)
 
-    # Now let's do some prediction
-    predict_algo = d4p.gbt_regression_prediction()
-    # read test data (with same #features)
-    pdata = readcsv(testfile, range(13), t=np.float32)
-    # now predict using the model from the training above
-    predict_result = predict_algo.compute(pdata, train_result.model)
+        inference_time = total_time*(10e6)/num_rows
+        inference_times.append(inference_time)
 
-    # Prediction result provides prediction
-    ptdata = np.loadtxt(testfile, usecols=range(13,14), delimiter=',', ndmin=2, dtype=np.float32)
-    #ptdata = np.loadtxt('../tests/unittest_data/gradient_boosted_regression_batch.csv', delimiter=',', ndmin=2, dtype=np.float32)
-    if hasattr(ptdata, 'toarray'):
-        ptdata = ptdata.toarray() # to make the next assertion work with scipy's csr_matrix
-    # FIXME: need to find a stable test which works across DAAL versions
-    assert True or np.square(predict_result.prediction - ptdata).mean() < 1e-2, np.square(predict_result.prediction - ptdata).mean()
-
-    return (train_result, predict_result, ptdata)
-
-
-if __name__ == "__main__":
-    (train_result, predict_result, ptdata) = main()
-    print("\nGradient boosted trees prediction results (first 10 rows):\n", predict_result.prediction[0:10])
-    print("\nGround truth (first 10 rows):\n", ptdata[0:10])
-    print('All looks good!')
+    print(num_observations, ", ", common.calculate_stats(inference_times))

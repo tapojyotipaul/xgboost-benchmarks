@@ -37,8 +37,16 @@ if __name__=='__main__':
         while batch_size <= args.observations:
             xg.run_inference(batch_size)
             batch_size *= 10
+    elif model == 'daal':
+        import daal
+        batch_size = 1  # Start with a single observation
+        logging.info(common.STATS)
+        while batch_size <= args.observations:
+            daal.run_inference(batch_size)
+            batch_size *= 10
     else:
         print(f"Could not find benchmark for {model}")
+        print(f"Available choices are: xgboost, daal")
 
 
     

@@ -2,8 +2,10 @@ from sklearn.datasets import load_boston
 import numpy as np
 import xgboost as xgb
 
+# Load Boston Housing dataset
 X, y = load_boston(return_X_y=True)
 
+# Label for the output
 STATS = '#, median, mean, std_dev, min_time, max_time, quantile_10, quantile_90'
 
 

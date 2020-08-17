@@ -40,8 +40,8 @@ def run_inference(num_observations:int = 1000):
     for _ in range(NUM_LOOPS):
 
         start_time = timer()
-		data = xgb.DMatrix(test_df)
-		mid_time = timer()
+        data = xgb.DMatrix(test_df)
+        mid_time = timer()
         MODEL.predict(data)
         end_time = timer()
 
@@ -64,5 +64,5 @@ def run_inference(num_observations:int = 1000):
         inference_times3.append(inference_time3)
 		
     print(num_observations, ", ", common.calculate_stats(inference_times1))
-	print(num_observations, ", ", common.calculate_stats(inference_times2))
-	print(num_observations, ", ", common.calculate_stats(inference_times3))
+    print(num_observations, ", ", common.calculate_stats(inference_times2))
+    print(num_observations, ", ", common.calculate_stats(inference_times3))

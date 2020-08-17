@@ -32,11 +32,11 @@ def run_inference(num_observations:int = 1000):
     # print(f"Running {NUM_LOOPS} inference loops with batch size {num_rows}...")
 
     run_times1 = []
-	run_times2 = []
-	run_times3 = []
+    run_times2 = []
+    run_times3 = []
     inference_times1 = []
-	inference_times2 = []
-	inference_times3 = []
+    inference_times2 = []
+    inference_times3 = []
     for _ in range(NUM_LOOPS):
 
         start_time = timer()

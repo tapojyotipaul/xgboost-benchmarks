@@ -44,7 +44,7 @@ def run_inference(num_observations:int = 1000):
         mid_time = timer()
         MODEL.predict(data)
         end_time = timer()
-
+        
         total_time1 = mid_time - start_time
         run_times1.append(total_time1*10e3)
 

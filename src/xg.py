@@ -3,6 +3,7 @@ from timeit import default_timer as timer
 import xgboost as xgb
 
 import common
+import gc
 
 NUM_LOOPS = 100
 PARAMS = { 
@@ -38,12 +39,13 @@ def run_inference(num_observations:int = 1000):
     inference_times2 = []
     inference_times3 = []
     for _ in range(NUM_LOOPS):
-
+        gc.disable()
         start_time = timer()
         data = xgb.DMatrix(test_df)
         mid_time = timer()
         MODEL.predict(data)
         end_time = timer()
+        gc.enable()
         
         total_time1 = mid_time - start_time
         run_times1.append(total_time1*10e3)

@@ -2,6 +2,7 @@ import argparse
 import logging
 
 from pathlib import Path
+
 from timeit import default_timer as timer
 import common
 

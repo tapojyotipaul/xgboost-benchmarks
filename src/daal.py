@@ -36,7 +36,7 @@ daal_model = d4p.get_gbt_model_from_xgboost(MODEL)
 def run_inference(num_observations:int = 1000):
     """Run xgboost for specified number of observations"""
     # Load data
-    test_df, y_test = common.get_test_data(num_observations)
+    test_df = common.get_test_data(num_observations)
     #test_df = common.get_test_data(num_observations)
     #data = pd.DataFrame(test_df, dtype=np.float32)
     #predictor = d4p.gbt_regression_prediction(**PARAMS)

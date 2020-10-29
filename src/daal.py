@@ -1,5 +1,7 @@
 from timeit import default_timer as timer
 
+import xgboost as xgb
+from sklearn.metrics import mean_squared_error
 import daal4py as d4p
 import numpy as np
 import pandas as pd
@@ -8,22 +10,36 @@ import common
 
 NUM_LOOPS = 100
 PARAMS = { 
-    'nIterations': 10,
-    'method': 'defaultDense',
-    'fptype': 'double'
+    'objective': 'reg:squarederror',
+    'alpha': 0.9,
+    'max_bin': 256,
+    'scale_pos_weight': 2,
+    'learning_rate': 0.1, 
+    'subsample': 1, 
+    'reg_lambda': 1, 
+    'min_child_weight': 0,
+    'max_depth': 8, 
+    'max_leaves': 2**8, 
+    'tree_method': 'hist', 
+    'predictor': 'cpu_predictor'
 }
 
-gbt = d4p.gbt_regression_training(maxIterations=200)
-MODEL = gbt.compute(
-            pd.DataFrame(common.X, dtype=np.float32), 
-            pd.DataFrame(common.y, dtype=np.float32)).model
+#gbt = d4p.gbt_regression_training(maxIterations=200)
+TRAIN_DF = xgb.DMatrix(data=common.X, label=common.y)
+MODEL = xgb.train(params=PARAMS, dtrain=TRAIN_DF)
+#MODEL = gbt.compute(
+#            pd.DataFrame(common.X, dtype=np.float32), 
+#            pd.DataFrame(common.y, dtype=np.float32)).model
+
+daal_model = d4p.get_gbt_model_from_xgboost(MODEL)
 
 def run_inference(num_observations:int = 1000):
     """Run xgboost for specified number of observations"""
     # Load data
-    test_df = common.get_test_data(num_observations)
-    data = pd.DataFrame(test_df, dtype=np.float32)
-    predictor = d4p.gbt_regression_prediction(**PARAMS)
+	test_df, y_test = common.get_test_data(num_observations)
+    #test_df = common.get_test_data(num_observations)
+    #data = pd.DataFrame(test_df, dtype=np.float32)
+    #predictor = d4p.gbt_regression_prediction(**PARAMS)
     num_rows = len(test_df)
 
     run_times = []
@@ -31,7 +47,9 @@ def run_inference(num_observations:int = 1000):
     for _ in range(NUM_LOOPS):
         
         start_time = timer()
-        predictor.compute(data, MODEL)
+		daal_predict_algo = d4p.gbt_regression_prediction(fptype='float')
+		daal_prediction = daal_predict_algo.compute(test_df, daal_model)
+        #predictor.compute(data, MODEL)
         end_time = timer()
 
         total_time = end_time - start_time

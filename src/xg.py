@@ -32,32 +32,13 @@ def run_inference(num_observations:int = 1000):
     num_rows = len(test_df)
     # print(f"Running {NUM_LOOPS} inference loops with batch size {num_rows}...")
 
-    run_times1 = []
-    run_times2 = []
     run_times3 = []
-    inference_times1 = []
-    inference_times2 = []
     inference_times3 = []
     for _ in range(NUM_LOOPS):
-        gc.disable()
         start_time = timer()
         data = xgb.DMatrix(test_df)
-        mid_time = timer()
         MODEL.predict(data)
         end_time = timer()
-        gc.enable()
-        
-        total_time1 = mid_time - start_time
-        run_times1.append(total_time1*10e3)
-
-        inference_time1 = total_time1*(10e6)/num_rows
-        inference_times1.append(inference_time1)
-
-        total_time2 = end_time - mid_time
-        run_times2.append(total_time2*10e3)
-
-        inference_time2 = total_time2*(10e6)/num_rows
-        inference_times2.append(inference_time2)
 		
         total_time3 = end_time - start_time
         run_times3.append(total_time3*10e3)
@@ -65,6 +46,4 @@ def run_inference(num_observations:int = 1000):
         inference_time3 = total_time3*(10e6)/num_rows
         inference_times3.append(inference_time3)
 		
-    print(num_observations, ", ", common.calculate_stats(inference_times1))
-    print(num_observations, ", ", common.calculate_stats(inference_times2))
     print(num_observations, ", ", common.calculate_stats(inference_times3))

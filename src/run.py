@@ -8,8 +8,8 @@ import common
 
 
 # Setup logging
-logger = logging.getLogger('__name__')
-logging.getLogger().setLevel(logging.INFO)
+# logger = logging.getLogger('__name__')
+# logging.getLogger().setLevel(logging.INFO)
 
 
 # Initialize Command Line arguments
@@ -34,7 +34,7 @@ if __name__=='__main__':
     if model == 'xgboost':
         import xg
         batch_size = 1  # Start with a single observation
-        logging.info(common.STATS)
+        # logging.info(common.STATS)
         while batch_size <= args.observations:
             xg.run_inference(batch_size)
             batch_size *= 10
@@ -43,7 +43,7 @@ if __name__=='__main__':
         import daal
         temp_df = pd.DataFrame()
         batch_size = 1  # Start with a single observation
-        logging.info(common.STATS)
+        # logging.info(common.STATS)
         while batch_size <= args.observations:
             temp = daal.run_inference(batch_size)
             temp["No_of_Observation"] = batch_size
@@ -55,7 +55,7 @@ if __name__=='__main__':
         import daal_lm
         temp_df = pd.DataFrame()
         batch_size = 1  # Start with a single observation
-        logging.info(common.STATS)
+        # logging.info(common.STATS)
         while batch_size <= args.observations:
             temp = daal_lm.run_inference(batch_size)
             temp["No_of_Observation"] = batch_size
@@ -68,7 +68,7 @@ if __name__=='__main__':
         import daal_rf
         temp_df = pd.DataFrame()
         batch_size = 1  # Start with a single observation
-        logging.info(common.STATS)
+        # logging.info(common.STATS)
         while batch_size <= args.observations:
             temp = daal_rf.run_inference(batch_size)
             temp["No_of_Observation"] = batch_size
@@ -81,7 +81,7 @@ if __name__=='__main__':
         import lm
         temp_df = pd.DataFrame()
         batch_size = 1  # Start with a single observation
-        logging.info(common.STATS)
+        # logging.info(common.STATS)
         while batch_size <= args.observations:
             temp = lm.run_inference(batch_size)
             temp["No_of_Observation"] = batch_size
@@ -94,7 +94,7 @@ if __name__=='__main__':
         import rf
         temp_df = pd.DataFrame()
         batch_size = 1  # Start with a single observation
-        logging.info(common.STATS)
+        # logging.info(common.STATS)
         while batch_size <= args.observations:
             temp = rf.run_inference(batch_size)
             temp["No_of_Observation"] = batch_size
@@ -107,7 +107,7 @@ if __name__=='__main__':
         import daal_logit
         temp_df = pd.DataFrame()
         batch_size = 1  # Start with a single observation
-        logging.info(common.STATS)
+        # logging.info(common.STATS)
         while batch_size <= args.observations:
             temp = daal_logit.run_inference(batch_size)
             temp["No_of_Observation"] = batch_size
@@ -120,9 +120,22 @@ if __name__=='__main__':
         import logit
         temp_df = pd.DataFrame()
         batch_size = 1  # Start with a single observation
-        logging.info(common.STATS)
+        # logging.info(common.STATS)
         while batch_size <= args.observations:
             temp = logit.run_inference(batch_size)
+            temp["No_of_Observation"] = batch_size
+            temp_df = temp_df.append(temp)
+            batch_size *= 10
+        print("__________________Summary_______________________")
+        print(temp_df)
+        
+    elif model == 'lm_patch':
+        import lm_patch
+        temp_df = pd.DataFrame()
+        batch_size = 1  # Start with a single observation
+        # logging.info(common.STATS)
+        while batch_size <= args.observations:
+            temp = lm_patch.run_inference(batch_size)
             temp["No_of_Observation"] = batch_size
             temp_df = temp_df.append(temp)
             batch_size *= 10

@@ -58,4 +58,6 @@ def run_inference(num_observations:int = 1000):
         inference_time = total_time*(10e6)/num_rows
         inference_times.append(inference_time)
 
-    print(num_observations, ", ", common.calculate_stats(inference_times))
+    return_elem = common.calculate_stats(inference_times)
+    print(num_observations, ", ", return_elem)
+    return return_elem

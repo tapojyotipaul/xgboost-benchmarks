@@ -1,6 +1,6 @@
 import argparse
 import logging
-
+import pandas as pd
 from pathlib import Path
 
 from timeit import default_timer as timer
@@ -38,13 +38,96 @@ if __name__=='__main__':
         while batch_size <= args.observations:
             xg.run_inference(batch_size)
             batch_size *= 10
+            
     elif model == 'daal':
         import daal
+        temp_df = pd.DataFrame()
         batch_size = 1  # Start with a single observation
         logging.info(common.STATS)
         while batch_size <= args.observations:
-            daal.run_inference(batch_size)
+            temp = daal.run_inference(batch_size)
+            temp["No_of_Observation"] = batch_size
+            temp_df = temp_df.append(temp)
             batch_size *= 10
+        print("__________________Summary_______________________")
+        print(temp_df)  
+    elif model == 'daal_lm':
+        import daal_lm
+        temp_df = pd.DataFrame()
+        batch_size = 1  # Start with a single observation
+        logging.info(common.STATS)
+        while batch_size <= args.observations:
+            temp = daal_lm.run_inference(batch_size)
+            temp["No_of_Observation"] = batch_size
+            temp_df = temp_df.append(temp)
+            batch_size *= 10
+        print("__________________Summary_______________________")
+        print(temp_df)
+            
+    elif model == 'daal_rf':
+        import daal_rf
+        temp_df = pd.DataFrame()
+        batch_size = 1  # Start with a single observation
+        logging.info(common.STATS)
+        while batch_size <= args.observations:
+            temp = daal_rf.run_inference(batch_size)
+            temp["No_of_Observation"] = batch_size
+            temp_df = temp_df.append(temp)
+            batch_size *= 10
+        print("__________________Summary_______________________")
+        print(temp_df)
+            
+    elif model == 'lm':
+        import lm
+        temp_df = pd.DataFrame()
+        batch_size = 1  # Start with a single observation
+        logging.info(common.STATS)
+        while batch_size <= args.observations:
+            temp = lm.run_inference(batch_size)
+            temp["No_of_Observation"] = batch_size
+            temp_df = temp_df.append(temp)
+            batch_size *= 10
+        print("__________________Summary_______________________")
+        print(temp_df)
+            
+    elif model == 'rf':
+        import rf
+        temp_df = pd.DataFrame()
+        batch_size = 1  # Start with a single observation
+        logging.info(common.STATS)
+        while batch_size <= args.observations:
+            temp = rf.run_inference(batch_size)
+            temp["No_of_Observation"] = batch_size
+            temp_df = temp_df.append(temp)
+            batch_size *= 10
+        print("__________________Summary_______________________")
+        print(temp_df)
+            
+    elif model == 'daal_logit':
+        import daal_logit
+        temp_df = pd.DataFrame()
+        batch_size = 1  # Start with a single observation
+        logging.info(common.STATS)
+        while batch_size <= args.observations:
+            temp = daal_logit.run_inference(batch_size)
+            temp["No_of_Observation"] = batch_size
+            temp_df = temp_df.append(temp)
+            batch_size *= 10
+        print("__________________Summary_______________________")
+        print(temp_df)
+            
+    elif model == 'logit':
+        import logit
+        temp_df = pd.DataFrame()
+        batch_size = 1  # Start with a single observation
+        logging.info(common.STATS)
+        while batch_size <= args.observations:
+            temp = logit.run_inference(batch_size)
+            temp["No_of_Observation"] = batch_size
+            temp_df = temp_df.append(temp)
+            batch_size *= 10
+        print("__________________Summary_______________________")
+        print(temp_df)
     else:
         print(f"Could not find benchmark for {model}")
         print(f"Available choices are: xgboost, daal")

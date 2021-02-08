@@ -32,7 +32,7 @@ if __name__=='__main__':
 
     # Run Inferencing
     if model == 'xgboost':
-        import xg
+        from xg_all import xg
         batch_size = 1  # Start with a single observation
         # logging.info(common.STATS)
         while batch_size <= args.observations:
@@ -40,7 +40,7 @@ if __name__=='__main__':
             batch_size *= 10
             
     elif model == 'daal':
-        import daal
+        from xg_all import daal
         temp_df = pd.DataFrame()
         batch_size = 1  # Start with a single observation
         # logging.info(common.STATS)
@@ -52,7 +52,7 @@ if __name__=='__main__':
         print("__________________Summary_______________________")
         print(temp_df)  
     elif model == 'daal_lm':
-        import daal_lm
+        from lm_all import daal_lm
         temp_df = pd.DataFrame()
         batch_size = 1  # Start with a single observation
         # logging.info(common.STATS)
@@ -63,9 +63,22 @@ if __name__=='__main__':
             batch_size *= 10
         print("__________________Summary_______________________")
         print(temp_df)
+
+    elif model == 'daal_lm_training':
+        from lm_all import daal_lm_training
+        temp_df = pd.DataFrame()
+        batch_size = 1000  # Start with a single observation
+        # logging.info(common.STATS)
+        while batch_size <= args.observations:
+            temp = daal_lm_training.run_inference(batch_size)
+            temp["No_of_Observation"] = batch_size
+            temp_df = temp_df.append(temp)
+            batch_size *= 10
+        print("__________________Summary_______________________")
+        print(temp_df)
             
     elif model == 'daal_rf':
-        import daal_rf
+        from rf_all import daal_rf
         temp_df = pd.DataFrame()
         batch_size = 1  # Start with a single observation
         # logging.info(common.STATS)
@@ -76,9 +89,22 @@ if __name__=='__main__':
             batch_size *= 10
         print("__________________Summary_______________________")
         print(temp_df)
-            
+  
+    elif model == 'daal_rf_training':
+        from rf_all import daal_rf_training
+        temp_df = pd.DataFrame()
+        batch_size = 1000  # Start with a single observation
+        # logging.info(common.STATS)
+        while batch_size <= args.observations:
+            temp = daal_rf_training.run_inference(batch_size)
+            temp["No_of_Observation"] = batch_size
+            temp_df = temp_df.append(temp)
+            batch_size *= 10
+        print("__________________Summary_______________________")
+        print(temp_df)
+          
     elif model == 'lm':
-        import lm
+        from lm_all import lm
         temp_df = pd.DataFrame()
         batch_size = 1  # Start with a single observation
         # logging.info(common.STATS)
@@ -89,9 +115,22 @@ if __name__=='__main__':
             batch_size *= 10
         print("__________________Summary_______________________")
         print(temp_df)
+
+    elif model == 'lm_training':
+        from lm_all import lm_training
+        temp_df = pd.DataFrame()
+        batch_size = 1  # Start with a single observation
+        # logging.info(common.STATS)
+        while batch_size <= args.observations:
+            temp = lm_training.run_inference(batch_size)
+            temp["No_of_Observation"] = batch_size
+            temp_df = temp_df.append(temp)
+            batch_size *= 10
+        print("__________________Summary_______________________")
+        print(temp_df)
             
     elif model == 'rf':
-        import rf
+        from rf_all import rf
         temp_df = pd.DataFrame()
         batch_size = 1  # Start with a single observation
         # logging.info(common.STATS)
@@ -102,9 +141,22 @@ if __name__=='__main__':
             batch_size *= 10
         print("__________________Summary_______________________")
         print(temp_df)
+
+    elif model == 'rf_training':
+        from rf_all import rf_training
+        temp_df = pd.DataFrame()
+        batch_size = 1  # Start with a single observation
+        # logging.info(common.STATS)
+        while batch_size <= args.observations:
+            temp = rf_training.run_inference(batch_size)
+            temp["No_of_Observation"] = batch_size
+            temp_df = temp_df.append(temp)
+            batch_size *= 10
+        print("__________________Summary_______________________")
+        print(temp_df)
             
     elif model == 'daal_logit':
-        import daal_logit
+        from logit_all import daal_logit
         temp_df = pd.DataFrame()
         batch_size = 1  # Start with a single observation
         # logging.info(common.STATS)
@@ -115,9 +167,22 @@ if __name__=='__main__':
             batch_size *= 10
         print("__________________Summary_______________________")
         print(temp_df)
+
+    elif model == 'daal_logit_training':
+        from logit_all import daal_logit_training
+        temp_df = pd.DataFrame()
+        batch_size = 1000  # Start with a single observation
+        # logging.info(common.STATS)
+        while batch_size <= args.observations:
+            temp = daal_logit_training.run_inference(batch_size)
+            temp["No_of_Observation"] = batch_size
+            temp_df = temp_df.append(temp)
+            batch_size *= 10
+        print("__________________Summary_______________________")
+        print(temp_df)
             
     elif model == 'logit':
-        import logit
+        from logit_all import logit
         temp_df = pd.DataFrame()
         batch_size = 1  # Start with a single observation
         # logging.info(common.STATS)
@@ -128,9 +193,49 @@ if __name__=='__main__':
             batch_size *= 10
         print("__________________Summary_______________________")
         print(temp_df)
+
+    elif model == 'logit_patch':
+        from logit_all import logit_patch
+        temp_df = pd.DataFrame()
+        batch_size = 1  # Start with a single observation
+        # logging.info(common.STATS)
+        while batch_size <= args.observations:
+            temp = logit_patch.run_inference(batch_size)
+            temp["No_of_Observation"] = batch_size
+            temp_df = temp_df.append(temp)
+            batch_size *= 10
+        print("__________________Summary_______________________")
+        print(temp_df)
+
+    elif model == 'logit_patch_training':
+        from logit_all import logit_patch_training
+        temp_df = pd.DataFrame()
+        batch_size = 100  # Start with a single observation
+        # logging.info(common.STATS)
+        while batch_size <= args.observations:
+            temp = logit_patch_training.run_inference(batch_size)
+            temp["No_of_Observation"] = batch_size
+            temp_df = temp_df.append(temp)
+            batch_size *= 10
+        print("__________________Summary_______________________")
+        print(temp_df)
+
+
+    elif model == 'logit_training':
+        from logit_all import logit_training
+        temp_df = pd.DataFrame()
+        batch_size = 100  # Start with a single observation
+        # logging.info(common.STATS)
+        while batch_size <= args.observations:
+            temp = logit_training.run_inference(batch_size)
+            temp["No_of_Observation"] = batch_size
+            temp_df = temp_df.append(temp)
+            batch_size *= 10
+        print("__________________Summary_______________________")
+        print(temp_df)
         
     elif model == 'lm_patch':
-        import lm_patch
+        from lm_all import lm_patch
         temp_df = pd.DataFrame()
         batch_size = 1  # Start with a single observation
         # logging.info(common.STATS)
@@ -141,9 +246,153 @@ if __name__=='__main__':
             batch_size *= 10
         print("__________________Summary_______________________")
         print(temp_df)
+        
+    elif model == 'rf_patch':
+        from rf_all import rf_patch
+        temp_df = pd.DataFrame()
+        batch_size = 1  # Start with a single observation
+        # logging.info(common.STATS)
+        while batch_size <= args.observations:
+            temp = rf_patch.run_inference(batch_size)
+            temp["No_of_Observation"] = batch_size
+            temp_df = temp_df.append(temp)
+            batch_size *= 10
+        print("__________________Summary_______________________")
+        print(temp_df)
+
+    elif model == 'rf_patch_training':
+        from rf_all import rf_patch_training
+        temp_df = pd.DataFrame()
+        batch_size = 1  # Start with a single observation
+        # logging.info(common.STATS)
+        while batch_size <= args.observations:
+            temp = rf_patch_training.run_inference(batch_size)
+            temp["No_of_Observation"] = batch_size
+            temp_df = temp_df.append(temp)
+            batch_size *= 10
+        print("__________________Summary_______________________")
+        print(temp_df)
+        
+    elif model == 'lm_patch_training':
+        from lm_all import lm_patch_training
+        temp_df = pd.DataFrame()
+        batch_size = 1  # Start with a single observation
+        # logging.info(common.STATS)
+        while batch_size <= args.observations:
+            temp = lm_patch_training.run_inference(batch_size)
+            temp["No_of_Observation"] = batch_size
+            temp_df = temp_df.append(temp)
+            batch_size *= 10
+        print("__________________Summary_______________________")
+        print(temp_df)
+        
+    elif model == 'kmeans':
+        from kmeans_all import kmeans
+        temp_df = pd.DataFrame()
+        batch_size = 1  # Start with a single observation
+        # logging.info(common.STATS)
+        while batch_size <= args.observations:
+            temp = kmeans.run_inference(batch_size)
+            temp["No_of_Observation"] = batch_size
+            temp_df = temp_df.append(temp)
+            batch_size *= 10
+        print("__________________Summary_______________________")
+        print(temp_df)
+        
+    elif model == 'kmeans_patch':
+        from kmeans_all import kmeans_patch
+        temp_df = pd.DataFrame()
+        batch_size = 1  # Start with a single observation
+        # logging.info(common.STATS)
+        while batch_size <= args.observations:
+            temp = kmeans_patch.run_inference(batch_size)
+            temp["No_of_Observation"] = batch_size
+            temp_df = temp_df.append(temp)
+            batch_size *= 10
+        print("__________________Summary_______________________")
+        print(temp_df)
+        
+    elif model == 'daal_kmeans_training':
+        from kmeans_all import daal_kmeans_training
+        temp_df = pd.DataFrame()
+        batch_size = 100  # Start with a single observation
+        # logging.info(common.STATS)
+        while batch_size <= args.observations:
+            temp = daal_kmeans_training.run_inference(batch_size)
+            temp["No_of_Observation"] = batch_size
+            temp_df = temp_df.append(temp)
+            batch_size *= 10
+        print("__________________Summary_______________________")
+        print(temp_df)
+        
+    elif model == 'kmeans_training':
+        from kmeans_all import kmeans_training
+        temp_df = pd.DataFrame()
+        batch_size = 100  # Start with a single observation
+        # logging.info(common.STATS)
+        while batch_size <= args.observations:
+            temp = kmeans_training.run_inference(batch_size)
+            temp["No_of_Observation"] = batch_size
+            temp_df = temp_df.append(temp)
+            batch_size *= 10
+        print("__________________Summary_______________________")
+        print(temp_df)
+        
+    elif model == 'kmeans_patch_training':
+        from kmeans_all import kmeans_patch_training
+        temp_df = pd.DataFrame()
+        batch_size = 100  # Start with a single observation
+        # logging.info(common.STATS)
+        while batch_size <= args.observations:
+            temp = kmeans_patch_training.run_inference(batch_size)
+            temp["No_of_Observation"] = batch_size
+            temp_df = temp_df.append(temp)
+            batch_size *= 10
+        print("__________________Summary_______________________")
+        print(temp_df)
+        
+    elif model == 'daal_kmeans':
+        from kmeans_all import daal_kmeans
+        temp_df = pd.DataFrame()
+        batch_size = 1  # Start with a single observation
+        # logging.info(common.STATS)
+        while batch_size <= args.observations:
+            temp = daal_kmeans.run_inference(batch_size)
+            temp["No_of_Observation"] = batch_size
+            temp_df = temp_df.append(temp)
+            batch_size *= 10
+        print("__________________Summary_______________________")
+        print(temp_df)
+        
+    elif model == 'dbs':
+        from dbs_all import dbs
+        temp_df = pd.DataFrame()
+        batch_size = 1  # Start with a single observation
+        # logging.info(common.STATS)
+        while batch_size <= args.observations:
+            temp = dbs.run_inference(batch_size)
+            temp["No_of_Observation"] = batch_size
+            temp_df = temp_df.append(temp)
+            batch_size *= 10
+        print("__________________Summary_______________________")
+        print(temp_df)    
+        
+    elif model == 'dbs_patch':
+        from dbs_all import dbs_patch
+        temp_df = pd.DataFrame()
+        batch_size = 1  # Start with a single observation
+        # logging.info(common.STATS)
+        while batch_size <= args.observations:
+            temp = dbs_patch.run_inference(batch_size)
+            temp["No_of_Observation"] = batch_size
+            temp_df = temp_df.append(temp)
+            batch_size *= 10
+        print("__________________Summary_______________________")
+        print(temp_df) 
+     
     else:
         print(f"Could not find benchmark for {model}")
-        print(f"Available choices are: xgboost, daal")
+        # print(f"Available choices are: xgboost, daal")
 
 
     

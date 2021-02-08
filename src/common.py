@@ -35,6 +35,28 @@ def get_test_data(size: int = 1):
         num_rows = len(test_df)
 
     return test_df[:size]
+    
+def get_test_data_y(size: int = 1):
+    """Generates a test dataset of the specified size""" 
+    num_rows = len(y)
+    test_df = y.copy()
+
+    while num_rows < size:
+        test_df = np.append(test_df, test_df, axis=0)
+        num_rows = len(test_df)
+
+    return test_df[:size]
+
+def get_test_data_yc(size: int = 1):
+    """Generates a test dataset of the specified size""" 
+    num_rows = len(y_cls)
+    test_df = y_cls.copy()
+
+    while num_rows < size:
+        test_df = np.append(test_df, test_df, axis=0)
+        num_rows = len(test_df)
+
+    return test_df[:size]
 
 def get_test_data_df(X,size: int = 1):
     """Generates a test dataset of the specified size""" 
